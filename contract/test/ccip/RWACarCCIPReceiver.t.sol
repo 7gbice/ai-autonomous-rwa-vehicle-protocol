@@ -1,55 +1,50 @@
 // SPDX-License-Identifier: MIT
-
 pragma solidity ^0.8.0;
 
-import "../RWACarCCIPWrapper.sol";
-import "truffle/Assert.sol";
-import "truffle/DeployedAddresses.sol";
+import "forge-std/Test.sol";
+import "..src/RWACarCCIPWrapper.sol";
 
-contract RWACarCCIPReceiverTest {
+contract RWACarCCIPReceiverTest is Test {
     RWACarCCIPWrapper rWACarCCIPWrapper;
 
-    // Move to the setup function to initialize the contract
-    function beforeAll() public {
-        rWACarCCIPWrapper = RWACarCCIPWrapper(DeployedAddresses.RWACarCCIPWrapper());
+    function setUp() public {
+        // Deploy a fresh instance for each test
+        rWACarCCIPWrapper = new RWACarCCIPWrapper();
     }
 
-    // Test for setAllowedSourceChain
     function testSetAllowedSourceChain() public {
-        uint256 chainId = 1;  // Replace with actual chain ID
+        uint256 chainId = 1; // Replace with actual chain ID
         rWACarCCIPWrapper.setAllowedSourceChain(chainId, true);
         bool isAllowed = rWACarCCIPWrapper.isSourceChainAllowed(chainId);
-        Assert.isTrue(isAllowed, "Chain should be allowed.");
+        assertTrue(isAllowed, "Chain should be allowed.");
     }
 
-    // Test for lockAndSend
     function testLockAndSend() public {
-        address recipient = address(0x123);  // Replace with desired recipient
-        uint256 amount = 1000;  // Example amount
+        address recipient = address(0x123); // Replace with desired recipient
+        uint256 amount = 1000; // Example amount
 
         rWACarCCIPWrapper.lockAndSend(recipient, amount);
 
-        // Insert appropriate assertion logic and states to verify
+        // TODO: Add assertions depending on lockAndSend’s state changes
+        // For example:
+        // assertTrue(rWACarCCIPWrapper.isTokenLocked(address(rWACarCCIPWrapper)));
     }
 
-    // Test for emergencyUnlock
     function testEmergencyUnlock() public {
-        // Assuming contract has a modifier or a condition for it
+        // Call emergency unlock
         rWACarCCIPWrapper.emergencyUnlock();
 
-        // Check state to assure that unlock has been successful
+        // TODO: Add assertions to verify unlock state
+        // Example: assertFalse(rWACarCCIPWrapper.isTokenLocked(address(rWACarCCIPWrapper)));
     }
 
-    // Test for isTokenLocked
     function testIsTokenLocked() public {
-        address tokenAddress = address(rWACarCCIPWrapper);  // Example token address
+        address tokenAddress = address(rWACarCCIPWrapper);
         bool locked = rWACarCCIPWrapper.isTokenLocked(tokenAddress);
-        // Verify if token is locked at the beginning
-        Assert.isFalse(locked, "Token should not be locked initially.");
+        assertFalse(locked, "Token should not be locked initially.");
 
-        // Now lock the token and verify
         rWACarCCIPWrapper.lockAndSend(address(0x123), 1000);
         locked = rWACarCCIPWrapper.isTokenLocked(tokenAddress);
-        Assert.isTrue(locked, "Token should be locked after locking and sending.");
+        assertTrue(locked, "Token should be locked after locking and sending.");
     }
 }
