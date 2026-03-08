@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
-import "../RWACarCCIPWrapper.sol";
+import "..src/RWACarCCIPWrapper.sol";
 
 contract RWACarCCIPReceiverProperTest is Test {
     RWACarCCIPWrapper public rwACarCCIPWrapper;
