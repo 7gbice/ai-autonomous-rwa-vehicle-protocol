@@ -179,6 +179,8 @@ import {RWA_CarNFT} from "./RWA_CarNFT.sol";
  * @title RWACarCCIPWrapper
  * @dev Wraps the RWA_CarNFT contract to allow locking NFTs and sending cross-chain unlock instructions via Chainlink CCIP.
  */
+
+/**
 contract RWACarCCIPWrapper is CCIPSender, CCIPReceiver, Ownable {
     RWA_CarNFT public immutable RWACAR;
 
